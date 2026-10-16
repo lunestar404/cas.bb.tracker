@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAS &amp; Build/Buy Tracker</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Fraunces:wght@500;600&display=swap");
+:root{
+  --bg:#faf6ee;--panel:#fffdf8;--ink:#5c4f42;--muted:#948575;--line:#e9ddc8;
+  --green:#a8d8b9;--green-dark:#82bea0;--bad:#c2564f;--lavender:#d8c9ee;--peach:#f6d0b5;--cream:#fbf0d9;
+  --accent:#c98d84;--accent-soft:#f2ddd8;--accent-dark:#96635a;
+  --rose:#c98d84;--rose-soft:#f2ddd8;--sage:#96ab88;--sage-soft:#e5ecdf;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Poppins,Arial,Helvetica,sans-serif}
+header{background:linear-gradient(90deg,var(--rose-soft),var(--cream),var(--sage-soft))}
+.top{max-width:1900px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
+.logo{font-weight:900;font-size:20px;letter-spacing:.3px}.logo b{color:#6d9f89}
+.hero{background:var(--bg);border-bottom:1px solid var(--line)}
+.hero-inner{max-width:1900px;margin:auto;padding:26px 18px}
+h1{margin:0 0 8px;font-size:34px;font-family:Fraunces,Georgia,serif;font-weight:600}
+.layout{max-width:1900px;margin:22px auto;padding:0 24px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px}
+.layout.filters-hidden{grid-template-columns:minmax(0,1fr)}
+.layout.filters-hidden .sidebar{display:none}
+.card{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:14px;box-shadow:0 7px 22px rgba(116,95,125,.08)}
+.sidebar{padding:16px;position:sticky;top:14px;align-self:start;background:linear-gradient(180deg,#fffafd,#f6f2fb)}
+.sidebar section{padding:13px 0;border-bottom:1px solid #eee}.sidebar section:last-child{border:0}
+.sidebar h3{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:#555;margin:0 0 9px}
+button,input,select{font:inherit}
+.btn{border:1px solid #dfd4df;background:#fff8fb;color:#62596a;border-radius:9px;padding:9px 10px;cursor:pointer}
+.btn.primary{background:#a8d8b9;border-color:#91c9a7;color:#42594b}
+.filters-toggle-btn{background:rgba(255,255,255,.5);border-color:rgba(201,141,132,.4);color:var(--ink)}
+.input{width:100%;padding:9px;border:1px solid #e2d7e1;border-radius:9px;background:#fffafd;color:#554f5d}
+.actions{display:flex;gap:7px;flex-wrap:wrap}
+.req-filter{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.req-btn{border:1px solid #dfd4df;background:#fff8fb;color:#62596a;border-radius:9px;padding:9px 7px;font-size:12px;font-weight:700;cursor:pointer}
+.req-btn.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark)}
+.status{font-size:12px;line-height:1.5;color:var(--muted);margin-top:8px}
+.status.ok{color:#2e7f3e}.status.bad{color:var(--bad)}
+.notice{padding:13px 14px;background:#fff7df;border:1px solid #f1ddb1;border-radius:12px;margin-bottom:16px;font-size:13px;line-height:1.55;display:none}
+.tabs{display:flex;gap:8px;margin-bottom:16px}
+.tab{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:9px 20px;font-weight:600;cursor:pointer}
+.tab.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark)}
+.progress-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:16px}
+.summary{padding:17px;background:var(--panel)}
+.progress-label{font-size:12px;text-transform:uppercase;color:#777;font-weight:800}
+.summary-row{display:flex;align-items:end;justify-content:space-between;gap:16px}
+.percent{font-size:31px;font-weight:900}.counter{font-size:12px;color:var(--muted);flex-shrink:0}
+.bar{height:11px;background:#f0e7ee;border-radius:30px;overflow:hidden;margin-top:12px}
+.fill{height:100%;width:0;background:var(--accent);transition:.25s}
+#content{display:flex;flex-direction:column;gap:18px}
+.empty{padding:36px;text-align:center;color:#777}
+.section-head{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--panel);border-bottom:2px dashed var(--line);border-radius:14px;cursor:pointer;user-select:none}
+.section:not(.is-collapsed) .section-head{border-radius:14px 14px 0 0}
+.section-head h2{margin:0;font-size:16px;font-weight:600;flex:1;min-width:0;font-family:Fraunces,Georgia,serif;color:var(--rose)}
+.arrow{color:var(--rose);font-size:13px;width:14px;text-align:center}
+.count-pill{font-size:12px;color:var(--muted)}
+.progress-ring{--pct:0;width:34px;height:34px;border-radius:50%;flex-shrink:0;background:conic-gradient(var(--rc,var(--accent)) calc(var(--pct)*1%),var(--rs,var(--accent-soft)) 0);display:flex;align-items:center;justify-content:center}
+.ring-hole{width:26px;height:26px;border-radius:50%;background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:600;color:var(--rc,var(--accent-dark))}
+.section.is-collapsed .section-body{display:none}
+.section-body{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:10px}
+.item{display:grid;grid-template-columns:20px 72px 1fr auto;align-items:center;gap:12px;min-height:96px;padding:12px 16px;border:1px solid var(--line);border-radius:10px;background:var(--panel);cursor:pointer;transition:.15s;box-shadow:4px 4px 0 var(--cream),4px 4px 0 1px var(--line)}
+.item:hover{background:#fff9fc}
+.item input{width:18px;height:18px;accent-color:var(--green-dark);pointer-events:none;margin:0}
+.item.done .name{text-decoration:line-through;color:var(--muted)}
+.item.done .goal-icon{opacity:.55}
+.goal-icon{width:72px;height:72px;display:flex;align-items:center;justify-content:center}
+.goal-icon img{width:68px;height:68px;object-fit:contain}
+.name{font-size:14px;font-weight:600;line-height:1.3}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.tag{font-size:11px;color:#6e6472;background:#f1ebf9;padding:3px 8px;border-radius:20px}
+.tag.req{background:#fde5ee;color:#925d73}.tag.opt{background:#e7f3fb;color:#557b93}
+.pack-hover{position:relative;display:inline-flex;align-items:center}
+.pack-hover img{width:26px;height:26px;object-fit:contain}
+.pack-hover::after{content:attr(data-pack-name);position:absolute;right:0;bottom:32px;background:#554f5d;color:#fff;padding:5px 8px;border-radius:8px;font-size:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:.2s;z-index:5}
+.pack-hover:hover::after{opacity:1}
+@media(max-width:1200px){.section-body{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:1050px){.progress-grid{grid-template-columns:1fr}}
+@media(max-width:800px){.layout{grid-template-columns:1fr;padding:0 12px}.sidebar{position:static}}
+@media(max-width:600px){.section-body{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="top"><div class="logo">◆ <b>CAS</b> &amp; BUILD/BUY TRACKER</div><button id="filtersToggle" class="btn filters-toggle-btn">Filters</button></div></header>
+<div class="hero"><div class="hero-inner"><h1>CAS &amp; Build/Buy Progress Tracker</h1></div></div>
+
+<div class="layout filters-hidden" id="mainLayout">
+<aside class="card sidebar">
+  <section>
+    <h3>Google Sheet</h3>
+    <div class="actions"><button id="refreshBtn" class="btn primary">Refresh now</button></div>
+    <div id="sourceStatus" class="status">Loading your sheet…</div>
+  </section>
+  <section><h3>Search</h3><input id="search" class="input" placeholder="Search section, pack, ID…"></section>
+  <section><h3>Section</h3><select id="sectionFilter" class="input"><option value="">All sections</option></select></section>
+  <section><h3>Gender</h3><select id="genderFilter" class="input"><option value="">All genders</option></select></section>
+  <section><h3>Life Stage</h3><select id="stageFilter" class="input"><option value="">All life stages</option></select></section>
+  <section>
+    <h3>Show Requirements</h3>
+    <div class="req-filter">
+      <button type="button" class="req-btn active" data-req="Both">Both</button>
+      <button type="button" class="req-btn" data-req="Required">Required</button>
+      <button type="button" class="req-btn" data-req="Optional">Optional</button>
+    </div>
+  </section>
+  <section><h3>Pack</h3><select id="packFilter" class="input"><option value="">All packs</option></select></section>
+  <section><h3>View</h3><select id="statusFilter" class="input"><option value="all">All items</option><option value="incomplete">Incomplete only</option></select></section>
+  <section><h3>Progress</h3><div class="actions"><button id="resetBtn" class="btn">Reset</button></div></section>
+</aside>
+
+<main>
+  <div id="accessNotice" class="notice">Couldn't read the sheet. Set it to <b>Share → General access → Anyone with the link → Viewer</b>, then press Refresh.</div>
+  <div class="tabs" id="tabs"></div>
+  <div class="progress-grid">
+    <div class="card summary"><div class="summary-row"><div><div class="progress-label">Overall progress</div><div class="percent" id="pct0">0%</div></div><div class="counter" id="cnt0">0 / 0 complete</div></div><div class="bar"><div class="fill" id="fill0"></div></div></div>
+    <div class="card summary"><div class="summary-row"><div><div class="progress-label">Required</div><div class="percent" id="pct1">0%</div></div><div class="counter" id="cnt1">0 / 0 complete</div></div><div class="bar"><div class="fill" id="fill1"></div></div></div>
+    <div class="card summary"><div class="summary-row"><div><div class="progress-label">Optional</div><div class="percent" id="pct2">0%</div></div><div class="counter" id="cnt2">0 / 0 complete</div></div><div class="bar"><div class="fill" id="fill2"></div></div></div>
+  </div>
+  <div id="content"><div class="card empty">Loading sheet data…</div></div>
+</main>
+</div>
+
+<script>
+const SHEET_ID="1M4TX5Q2YtTJkMJkVS_eJLs1y4PWMur-7w21Zvp6RcNs";
+const TABS=[{key:"CAS",sheet:"CAS",label:"CAS"},{key:"BB",sheet:"BUILDBUY",label:"Build / Buy"}];
+const REFRESH_MS=60000;
+const LS={done:"casbb_done_v1",collapsed:"casbb_collapsed_v1"};
+const RINGS=[["#c98d84","#f2ddd8"],["#96ab88","#e5ecdf"],["#b7a6e8","#f3eefb"],["#e8c98a","#faf1de"]];
+const $=id=>document.getElementById(id);
+const load=k=>{try{return JSON.parse(localStorage.getItem(k)||"{}")}catch{return{}}};
+const save=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+let done=load(LS.done),collapsed=load(LS.collapsed);
+let data={CAS:[],BB:[]},tab="CAS",req="Both";
+const esc=s=>String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
+const fileId=u=>{u=String(u||"");const m=u.match(/\/d\/([^\/?]+)/)||u.match(/[?&]id=([^&]+)/);return m?m[1]:""};
+const img=u=>{const i=fileId(u);return i?`https://drive.google.com/thumbnail?id=${i}&sz=w200`:(u||"")};
+const isReq=r=>/^req/i.test(r.req);
+
+function gviz(sheet){
+  return new Promise((res,rej)=>{
+    const cb="__cb_"+Math.random().toString(36).slice(2);
+    const s=document.createElement("script");
+    const t=setTimeout(()=>{clean();rej(new Error("timeout"))},15000);
+    function clean(){clearTimeout(t);try{delete window[cb]}catch{}s.remove()}
+    window[cb]=p=>{
+      try{
+        if(!p||p.status==="error")throw new Error("not readable");
+        const labels=p.table.cols.map(c=>String(c.label||""));
+        const rows=(p.table.rows||[]).map(r=>p.table.cols.map((_,i)=>{const c=r.c&&r.c[i];return c?String(c.f??c.v??"").trim():""}));
+        clean();res([labels].concat(rows));
+      }catch(e){clean();rej(e)}
+    };
+    s.src=`https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?sheet=${encodeURIComponent(sheet)}&headers=0&tqx=${encodeURIComponent("out:json;responseHandler:"+cb)}&_=${Date.now()}`;
+    s.onerror=()=>{clean();rej(new Error("network"))};
+    document.head.appendChild(s);
+  });
+}
+
+function parse(grid,key){
+  const h=grid.slice(0,6).findIndex(r=>r.some(c=>/^(section|pack)$/i.test(c.trim())));
+  if(h<0)return[];
+  const head=grid[h].map(c=>c.trim().toLowerCase());
+  const col=n=>head.indexOf(n);
+  const c={section:col("section"),gender:col("gender"),stage:col("life stage"),req:col("requirement"),pack:col("pack"),id:col("id"),packIcon:col("pack icon"),idIcon:col("id icon")};
+  const g=(r,i)=>i>=0?(r[i]||"").trim():"";
+  const out=[];
+  grid.slice(h+1).forEach((r,n)=>{
+    const o={section:g(r,c.section),gender:g(r,c.gender),stage:g(r,c.stage),req:g(r,c.req),pack:g(r,c.pack),id:g(r,c.id),packIcon:g(r,c.packIcon),idIcon:g(r,c.idIcon)};
+    if(!o.section&&!o.id&&!o.idIcon)return;
+    o.section=o.section||"Other";
+    o.key=key+"|"+(fileId(o.idIcon)||o.id||("row"+n));
+    out.push(o);
+  });
+  return out;
+}
+
+async function refresh(){
+  const st=$("sourceStatus");st.className="status";st.textContent="Loading your sheet…";
+  let ok=0,fail=0;
+  for(const t of TABS){
+    try{data[t.key]=parse(await gviz(t.sheet),t.key);ok++}catch{fail++}
+  }
+  $("accessNotice").style.display=ok===0?"block":"none";
+  if(ok){st.className="status ok";st.textContent=`Loaded ${data.CAS.length} CAS · ${data.BB.length} Build/Buy items`+(fail?" (one tab unavailable)":"")}
+  else{st.className="status bad";st.textContent="Could not load the sheet."}
+  fillFilters();render();
+}
+
+function fillSel(id,vals,first){
+  const el=$(id),cur=el.value;
+  el.innerHTML=`<option value="">${first}</option>`+[...new Set(vals.filter(Boolean))].sort().map(v=>`<option>${esc(v)}</option>`).join("");
+  if([...el.options].some(o=>o.value===cur))el.value=cur;
+}
+function fillFilters(){
+  const rows=data[tab];
+  fillSel("sectionFilter",rows.map(r=>r.section),"All sections");
+  fillSel("genderFilter",rows.map(r=>r.gender),"All genders");
+  fillSel("stageFilter",rows.map(r=>r.stage),"All life stages");
+  fillSel("packFilter",rows.map(r=>r.pack),"All packs");
+}
+
+function setBar(i,d,t){
+  const p=t?Math.round(d/t*100):0;
+  $("pct"+i).textContent=p+"%";$("cnt"+i).textContent=`${d} / ${t} complete`;$("fill"+i).style.width=p+"%";
+}
+
+function render(){
+  $("tabs").innerHTML=TABS.map(t=>`<button class="tab ${t.key===tab?"active":""}" data-tab="${t.key}">${t.label} <small>(${data[t.key].length})</small></button>`).join("");
+  const all=data[tab],isD=r=>!!done[r.key];
+  setBar(0,all.filter(isD).length,all.length);
+  const rq=all.filter(isReq),op=all.filter(r=>!isReq(r));
+  setBar(1,rq.filter(isD).length,rq.length);setBar(2,op.filter(isD).length,op.length);
+
+  const q=$("search").value.trim().toLowerCase(),sec=$("sectionFilter").value,gen=$("genderFilter").value,stg=$("stageFilter").value,pk=$("packFilter").value,sv=$("statusFilter").value;
+  const rows=all.filter(r=>
+    (!sec||r.section===sec)&&(!gen||r.gender===gen)&&(!stg||r.stage===stg)&&(!pk||r.pack===pk)&&
+    (req==="Both"||(req==="Required"?isReq(r):!isReq(r)))&&(sv!=="incomplete"||!isD(r))&&
+    (!q||[r.section,r.gender,r.stage,r.pack,r.id].join(" ").toLowerCase().includes(q)));
+  if(!rows.length){$("content").innerHTML=`<div class="card empty">${all.length?"No items match your filters.":"No items in this tab yet."}</div>`;return}
+
+  const groups=new Map();
+  rows.forEach(r=>{if(!groups.has(r.section))groups.set(r.section,[]);groups.get(r.section).push(r)});
+  let gi=0;
+  $("content").innerHTML=[...groups].map(([name,items])=>{
+    const d=items.filter(isD).length,pct=Math.round(d/items.length*100),[rc,rs]=RINGS[gi++%4];
+    const col=!!collapsed[tab+"|"+name]||collapsed[tab+"|"+name]===undefined;
+    const cards=items.map((r,n)=>{
+      const label=r.id||`${r.section} ${n+1}`;
+      return `<div class="item ${isD(r)?"done":""}" data-k="${esc(r.key)}">
+        <input type="checkbox" ${isD(r)?"checked":""} tabindex="-1">
+        <div class="goal-icon">${r.idIcon?`<img loading="lazy" src="${img(r.idIcon)}" alt="" onerror="this.style.display='none'">`:""}</div>
+        <div><div class="name">${esc(label)}</div><div class="tags">
+          ${r.gender?`<span class="tag">${esc(r.gender)}</span>`:""}${r.stage?`<span class="tag">${esc(r.stage)}</span>`:""}
+          ${r.req?`<span class="tag ${isReq(r)?"req":"opt"}">${esc(r.req)}</span>`:""}</div></div>
+        ${r.packIcon?`<span class="pack-hover" data-pack-name="${esc(r.pack)}"><img loading="lazy" src="${img(r.packIcon)}" alt="" onerror="this.style.display='none'"></span>`:"<span></span>"}
+      </div>`}).join("");
+    return `<section class="section ${col?"is-collapsed":""}" data-sec="${esc(name)}">
+      <div class="section-head" style="border-bottom-color:${rc}"><span class="arrow">${col?"▸":"▾"}</span><h2>${esc(name)}</h2>
+        <span class="count-pill">${d}/${items.length}</span>
+        <div class="progress-ring" style="--pct:${pct};--rc:${rc};--rs:${rs}"><div class="ring-hole">${pct}%</div></div></div>
+      <div class="section-body">${cards}</div></section>`;
+  }).join("");
+}
+
+document.addEventListener("click",e=>{
+  const t=e.target.closest("[data-tab]");
+  if(t){tab=t.dataset.tab;fillFilters();render();return}
+  const rb=e.target.closest(".req-btn");
+  if(rb){req=rb.dataset.req;document.querySelectorAll(".req-btn").forEach(b=>b.classList.toggle("active",b===rb));render();return}
+  const it=e.target.closest(".item");
+  if(it){const k=it.dataset.k;if(done[k])delete done[k];else done[k]=1;save(LS.done,done);render();return}
+  const h=e.target.closest(".section-head");
+  if(h){const k=tab+"|"+h.parentElement.dataset.sec;collapsed[k]=!(collapsed[k]===undefined||collapsed[k]);save(LS.collapsed,collapsed);render()}
+});
+["search","sectionFilter","genderFilter","stageFilter","packFilter","statusFilter"].forEach(id=>$(id).addEventListener("input",render));
+$("filtersToggle").onclick=()=>$("mainLayout").classList.toggle("filters-hidden");
+$("refreshBtn").onclick=refresh;
+$("resetBtn").onclick=()=>{if(confirm("Reset all completion progress?")){done={};save(LS.done,done);render()}};
+refresh();setInterval(refresh,REFRESH_MS);
+</script>
+</body>
+</html>
