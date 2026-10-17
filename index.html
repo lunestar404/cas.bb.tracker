@@ -171,13 +171,15 @@ function parse(grid,key){
 async function refresh(){
   const st=$("sourceStatus");st.className="status";st.textContent="Loading your sheet…";
   let ok=0,fail=0;
+  const before=JSON.stringify(data);
   for(const t of TABS){
     try{data[t.key]=parse(await gviz(t.sheet),t.key);ok++}catch{fail++}
   }
+  const changed=JSON.stringify(data)!==before;
   $("accessNotice").style.display=ok===0?"block":"none";
   if(ok){st.className="status ok";st.textContent=`Loaded ${data.CAS.length} CAS · ${data.BB.length} Build/Buy items`+(fail?" (one tab unavailable)":"")}
   else{st.className="status bad";st.textContent="Could not load the sheet."}
-  fillFilters();render();
+  if(changed||!$("content").children.length){fillFilters();render()}
 }
 
 function fillSel(id,vals,first){
@@ -198,12 +200,28 @@ function setBar(i,d,t){
   $("pct"+i).textContent=p+"%";$("cnt"+i).textContent=`${d} / ${t} complete`;$("fill"+i).style.width=p+"%";
 }
 
-function render(){
-  $("tabs").innerHTML=TABS.map(t=>`<button class="tab ${t.key===tab?"active":""}" data-tab="${t.key}">${t.label} <small>(${data[t.key].length})</small></button>`).join("");
+function updateBars(){
   const all=data[tab],isD=r=>!!done[r.key];
   setBar(0,all.filter(isD).length,all.length);
   const rq=all.filter(isReq),op=all.filter(r=>!isReq(r));
   setBar(1,rq.filter(isD).length,rq.length);setBar(2,op.filter(isD).length,op.length);
+}
+
+// Update ticks/counters in place so images are NOT re-created
+function updateSectionProgress(){
+  document.querySelectorAll("#content .section").forEach(sec=>{
+    const items=sec.querySelectorAll(".item"),d=sec.querySelectorAll(".item.done").length;
+    const pct=items.length?Math.round(d/items.length*100):0;
+    const pill=sec.querySelector(".count-pill");if(pill)pill.textContent=d+"/"+items.length;
+    const ring=sec.querySelector(".progress-ring");
+    if(ring){ring.style.setProperty("--pct",pct);const hole=ring.querySelector(".ring-hole");if(hole)hole.textContent=pct+"%"}
+  });
+}
+
+function render(){
+  $("tabs").innerHTML=TABS.map(t=>`<button class="tab ${t.key===tab?"active":""}" data-tab="${t.key}">${t.label} <small>(${data[t.key].length})</small></button>`).join("");
+  const all=data[tab],isD=r=>!!done[r.key];
+  updateBars();
 
   const q=$("search").value.trim().toLowerCase(),sec=$("sectionFilter").value,gen=$("genderFilter").value,stg=$("stageFilter").value,pk=$("packFilter").value,sv=$("statusFilter").value;
   const rows=all.filter(r=>
@@ -238,9 +256,20 @@ document.addEventListener("click",e=>{
   const rb=e.target.closest(".req-btn");
   if(rb){req=rb.dataset.req;document.querySelectorAll(".req-btn").forEach(b=>b.classList.toggle("active",b===rb));render();return}
   const it=e.target.closest(".item");
-  if(it){const k=it.dataset.k;if(done[k])delete done[k];else done[k]=1;save(LS.done,done);render();return}
+  if(it){
+    const k=it.dataset.k;if(done[k])delete done[k];else done[k]=1;save(LS.done,done);
+    if($("statusFilter").value==="incomplete"){render();return}   // item must disappear
+    it.classList.toggle("done",!!done[k]);
+    updateBars();updateSectionProgress();return;
+  }
   const h=e.target.closest(".section-head");
-  if(h){const k=tab+"|"+h.parentElement.dataset.sec;collapsed[k]=!(collapsed[k]===undefined||collapsed[k]);save(LS.collapsed,collapsed);render()}
+  if(h){
+    const sec=h.parentElement,k=tab+"|"+sec.dataset.sec;
+    collapsed[k]=!(collapsed[k]===undefined||collapsed[k]);save(LS.collapsed,collapsed);
+    const c=!!collapsed[k]||collapsed[k]===undefined;
+    sec.classList.toggle("is-collapsed",c);
+    const a=h.querySelector(".arrow");if(a)a.textContent=c?"▸":"▾";
+  }
 });
 ["search","sectionFilter","genderFilter","stageFilter","packFilter","statusFilter"].forEach(id=>$(id).addEventListener("input",render));
 $("filtersToggle").onclick=()=>$("mainLayout").classList.toggle("filters-hidden");
