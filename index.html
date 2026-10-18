@@ -11,46 +11,48 @@
   --green:#a8d8b9;--green-dark:#82bea0;--bad:#c2564f;--lavender:#d8c9ee;--peach:#f6d0b5;--cream:#fbf0d9;
   --accent:#c98d84;--accent-soft:#f2ddd8;--accent-dark:#96635a;
   --rose:#c98d84;--rose-soft:#f2ddd8;--sage:#96ab88;--sage-soft:#e5ecdf;
+  --card:#fffdf8e6;--btn-bg:#fff8fb;--btn-ink:#62596a;--btn-line:#dfd4df;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Poppins,Arial,Helvetica,sans-serif}
 header{background:linear-gradient(90deg,var(--rose-soft),var(--cream),var(--sage-soft))}
 .top{max-width:1900px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
-.logo{font-weight:900;font-size:20px;letter-spacing:.3px}.logo b{color:#6d9f89}
+.logo{font-weight:900;font-size:20px;letter-spacing:.3px}.logo b{color:var(--accent)}
 .hero{background:var(--bg);border-bottom:1px solid var(--line)}
 .hero-inner{max-width:1900px;margin:auto;padding:26px 18px}
 h1{margin:0 0 8px;font-size:34px;font-family:Fraunces,Georgia,serif;font-weight:600}
 .layout{max-width:1900px;margin:22px auto;padding:0 24px;display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px}
 .layout.filters-hidden{grid-template-columns:minmax(0,1fr)}
 .layout.filters-hidden .sidebar{display:none}
-.card{background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:14px;box-shadow:0 7px 22px rgba(116,95,125,.08)}
-.sidebar{padding:16px;position:sticky;top:14px;align-self:start;background:linear-gradient(180deg,#fffafd,#f6f2fb)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 7px 22px rgba(116,95,125,.08)}
+.sidebar{padding:16px;position:sticky;top:14px;align-self:start;background:var(--card)}
 .sidebar section{padding:13px 0;border-bottom:1px solid #eee}.sidebar section:last-child{border:0}
-.sidebar h3{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:#555;margin:0 0 9px}
+.sidebar h3{font-size:13px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:0 0 9px}
 button,input,select{font:inherit}
-.btn{border:1px solid #dfd4df;background:#fff8fb;color:#62596a;border-radius:9px;padding:9px 10px;cursor:pointer}
+.btn{border:1px solid var(--btn-line);background:var(--btn-bg);color:var(--btn-ink);border-radius:9px;padding:9px 10px;cursor:pointer}
 .btn.primary{background:#a8d8b9;border-color:#91c9a7;color:#42594b}
-.filters-toggle-btn{background:rgba(255,255,255,.5);border-color:rgba(201,141,132,.4);color:var(--ink)}
-.input{width:100%;padding:9px;border:1px solid #e2d7e1;border-radius:9px;background:#fffafd;color:#554f5d}
+.filters-toggle-btn{background:var(--btn-bg);border-color:rgba(201,141,132,.4);color:var(--ink)}
+.input{width:100%;padding:9px;border:1px solid var(--btn-line);border-radius:9px;background:var(--btn-bg);color:var(--ink)}
 .actions{display:flex;gap:7px;flex-wrap:wrap}
 .req-filter{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.req-btn{border:1px solid #dfd4df;background:#fff8fb;color:#62596a;border-radius:9px;padding:9px 7px;font-size:12px;font-weight:700;cursor:pointer}
+.req-btn{border:1px solid var(--btn-line);background:var(--btn-bg);color:var(--btn-ink);border-radius:9px;padding:9px 7px;font-size:12px;font-weight:700;cursor:pointer}
 .req-btn.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark)}
 .status{font-size:12px;line-height:1.5;color:var(--muted);margin-top:8px}
 .status.ok{color:#2e7f3e}.status.bad{color:var(--bad)}
 .notice{padding:13px 14px;background:#fff7df;border:1px solid #f1ddb1;border-radius:12px;margin-bottom:16px;font-size:13px;line-height:1.55;display:none}
-.tabs{display:flex;gap:8px;margin-bottom:16px}
+.toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.tabs{display:flex;gap:8px}
 .tab{border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:999px;padding:9px 20px;font-weight:600;cursor:pointer}
 .tab.active{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark)}
 .progress-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-bottom:16px}
 .summary{padding:17px;background:var(--panel)}
-.progress-label{font-size:12px;text-transform:uppercase;color:#777;font-weight:800}
+.progress-label{font-size:12px;text-transform:uppercase;color:var(--muted);font-weight:800}
 .summary-row{display:flex;align-items:end;justify-content:space-between;gap:16px}
 .percent{font-size:31px;font-weight:900}.counter{font-size:12px;color:var(--muted);flex-shrink:0}
-.bar{height:11px;background:#f0e7ee;border-radius:30px;overflow:hidden;margin-top:12px}
+.bar{height:11px;background:var(--cream);border-radius:30px;overflow:hidden;margin-top:12px}
 .fill{height:100%;width:0;background:var(--accent);transition:.25s}
 #content{display:flex;flex-direction:column;gap:18px}
-.empty{padding:36px;text-align:center;color:#777}
+.empty{padding:36px;text-align:center;color:var(--muted)}
 .section-head{display:flex;align-items:center;gap:12px;padding:13px 15px;background:var(--panel);border-bottom:2px dashed var(--line);border-radius:14px;cursor:pointer;user-select:none}
 .section:not(.is-collapsed) .section-head{border-radius:14px 14px 0 0}
 .section-head h2{margin:0;font-size:16px;font-weight:600;flex:1;min-width:0;font-family:Fraunces,Georgia,serif;color:var(--rose)}
@@ -61,7 +63,7 @@ button,input,select{font:inherit}
 .section.is-collapsed .section-body{display:none}
 .section-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:10px;padding:12px}
 .item{display:flex;flex-direction:column;align-items:center;gap:6px;padding:6px 6px 8px;border:2px solid var(--line);border-radius:14px;background:var(--panel);cursor:pointer;transition:.15s;box-shadow:0 3px 8px rgba(116,95,125,.08)}
-.item:hover{background:#fff9fc}
+.item:hover{background:var(--cream)}
 .item.done{background:var(--sage-soft);border-color:var(--sage)}
 .item.done .goal-icon{opacity:.6}
 .goal-icon{width:100%;line-height:0}
@@ -70,12 +72,54 @@ button,input,select{font:inherit}
 .pack-hover img{width:20px;height:20px;object-fit:contain}
 .pack-hover::after{content:attr(data-pack-name);position:absolute;left:50%;transform:translateX(-50%);bottom:30px;background:#554f5d;color:#fff;padding:5px 8px;border-radius:8px;font-size:11px;white-space:nowrap;opacity:0;pointer-events:none;transition:.2s;z-index:5}
 .pack-hover:hover::after{opacity:1}
+.item{position:relative}
+.item-foot{display:flex;align-items:center;justify-content:center;gap:8px;min-height:24px}
+.info-btn{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:var(--panel);color:var(--accent-dark);font:600 13px/1 Fraunces,Georgia,serif;font-style:italic;cursor:pointer;padding:0;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.info-btn:hover{background:var(--accent-soft)}
+.modal{position:fixed;inset:0;background:rgba(60,48,38,.45);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.modal.open{display:flex}
+.modal-card{background:var(--panel);border-radius:18px;max-width:380px;width:100%;max-height:92vh;overflow:auto;padding:18px;box-shadow:0 18px 50px rgba(0,0,0,.28);position:relative}
+.modal-x{position:absolute;top:10px;right:12px;border:0;background:none;font-size:24px;line-height:1;color:var(--muted);cursor:pointer}
+.modal-img{width:60%;max-width:200px;margin:4px auto 12px;display:block;aspect-ratio:5/7;object-fit:cover;border-radius:12px;background:var(--cream)}
+.modal h3{font-family:Fraunces,Georgia,serif;font-size:20px;margin:0 0 10px;text-align:center}
+.req-badge{display:block;width:max-content;margin:0 auto 14px;padding:5px 16px;border-radius:999px;font-weight:600;font-size:13px}
+.req-badge.r{background:var(--accent-soft);color:var(--accent-dark);border:1px solid var(--accent)}
+.req-badge.o{background:var(--cream);color:var(--accent-dark);border:1px solid var(--lavender)}
+.req-badge.u{background:var(--cream);color:var(--muted);border:1px solid var(--line)}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px;margin:0 0 16px}
+.facts dt{color:var(--muted)}.facts dd{margin:0;font-weight:500}
+.modal-actions{display:flex;gap:8px}
+.modal-actions .btn{flex:1;padding:11px}
+.req-trigger{border:1px solid var(--line);background:var(--panel);color:var(--accent-dark);border-radius:999px;padding:9px 18px;font-weight:600;cursor:pointer;font-size:14px}
+.req-trigger.active{background:var(--accent-soft);border-color:var(--accent)}
+.top-right{position:relative;display:flex;gap:8px}
+.theme-menu{position:absolute;right:0;top:calc(100% + 8px);width:260px;max-height:70vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.22);padding:8px;display:none;z-index:40}
+.theme-menu.open{display:block}
+.theme-opt{display:flex;align-items:center;gap:12px;width:100%;border:0;background:none;color:var(--ink);padding:10px;border-radius:10px;cursor:pointer;font-size:14px;text-align:left}
+.theme-opt:hover{background:var(--cream)}
+.theme-opt.on{background:var(--accent-soft);font-weight:600;color:var(--accent-dark)}
+.theme-sw{display:flex}.theme-sw i{width:18px;height:18px;border-radius:50%;border:1px solid rgba(0,0,0,.1);margin-left:-5px}.theme-sw i:first-child{margin-left:0}
+.theme-group{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);padding:12px 10px 4px}
+.tools{display:flex;gap:8px;flex-wrap:wrap}
+.sec-card{max-width:440px;padding:20px}
+.sec-card h3{text-align:left;font-size:20px;margin:0 40px 14px 0}
+.sec-list{border:1px solid var(--line);border-radius:12px;max-height:60vh;overflow:auto;padding:0 10px}
+.sec-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 4px;border-bottom:1px solid var(--line);font-size:13px}
+.sec-row:last-child{border:0}
+.sec-row span{flex:1;min-width:0}
+.sec-row select{border:1px solid var(--lavender);background:var(--btn-bg);color:var(--ink);border-radius:12px;padding:8px 10px;font-size:12px;cursor:pointer}
+.sec-row select.set{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-dark);font-weight:600}
+.sec-note{font-size:12px;color:var(--muted);margin:10px 2px 0}
+.req-card{max-width:320px}
+.req-card h3{margin-bottom:14px}
+.req-card .req-btn{display:flex;justify-content:space-between;width:100%;padding:13px 16px;font-size:14px;margin-bottom:8px}
+.req-card .req-btn small{font-weight:500;opacity:.7}
 @media(max-width:1050px){.progress-grid{grid-template-columns:1fr}}
 @media(max-width:800px){.layout{grid-template-columns:1fr;padding:0 12px}.sidebar{position:static}}
 </style>
 </head>
 <body>
-<header><div class="top"><div class="logo">◆ <b>CAS</b> &amp; BUILD/BUY TRACKER</div><button id="filtersToggle" class="btn filters-toggle-btn">Filters</button></div></header>
+<header><div class="top"><div class="logo">◆ <b>CAS</b> &amp; BUILD/BUY TRACKER</div><div class="top-right"><button id="themeBtn" class="btn filters-toggle-btn">Theme</button><button id="filtersToggle" class="btn filters-toggle-btn">Filters</button><div class="theme-menu" id="themeMenu"></div></div></div></header>
 <div class="hero"><div class="hero-inner"><h1>CAS &amp; Build/Buy Progress Tracker</h1></div></div>
 
 <div class="layout filters-hidden" id="mainLayout">
@@ -89,14 +133,6 @@ button,input,select{font:inherit}
   <section><h3>Section</h3><select id="sectionFilter" class="input"><option value="">All sections</option></select></section>
   <section><h3>Gender</h3><select id="genderFilter" class="input"><option value="">All genders</option></select></section>
   <section><h3>Life Stage</h3><select id="stageFilter" class="input"><option value="">All life stages</option></select></section>
-  <section>
-    <h3>Show Requirements</h3>
-    <div class="req-filter">
-      <button type="button" class="req-btn active" data-req="Both">Both</button>
-      <button type="button" class="req-btn" data-req="Required">Required</button>
-      <button type="button" class="req-btn" data-req="Optional">Optional</button>
-    </div>
-  </section>
   <section><h3>Pack</h3><select id="packFilter" class="input"><option value="">All packs</option></select></section>
   <section><h3>View</h3><select id="statusFilter" class="input"><option value="all">All items</option><option value="incomplete">Incomplete only</option></select></section>
   <section><h3>Progress</h3><div class="actions"><button id="resetBtn" class="btn">Reset</button></div></section>
@@ -104,7 +140,7 @@ button,input,select{font:inherit}
 
 <main>
   <div id="accessNotice" class="notice">Couldn't read the sheet. Set it to <b>Share → General access → Anyone with the link → Viewer</b>, then press Refresh.</div>
-  <div class="tabs" id="tabs"></div>
+  <div class="toolbar"><div class="tabs" id="tabs"></div><div class="tools"><button type="button" class="req-trigger" id="reqBtn"></button><button type="button" class="req-trigger" id="secBtn">⚙ Section Requirements</button></div></div>
   <div class="progress-grid">
     <div class="card summary"><div class="summary-row"><div><div class="progress-label">Overall progress</div><div class="percent" id="pct0">0%</div></div><div class="counter" id="cnt0">0 / 0 complete</div></div><div class="bar"><div class="fill" id="fill0"></div></div></div>
     <div class="card summary"><div class="summary-row"><div><div class="progress-label">Required</div><div class="percent" id="pct1">0%</div></div><div class="counter" id="cnt1">0 / 0 complete</div></div><div class="bar"><div class="fill" id="fill1"></div></div></div>
@@ -114,6 +150,27 @@ button,input,select{font:inherit}
 </main>
 </div>
 
+<div class="modal" id="secModal" aria-hidden="true"><div class="modal-card sec-card" role="dialog" aria-modal="true">
+  <button class="modal-x" id="secX" aria-label="Close">×</button>
+  <h3>Section Requirement</h3>
+  <div class="sec-list" id="secList"></div>
+  <div class="sec-note">“Default” uses each item's Requirement from the sheet.</div>
+</div></div>
+<div class="modal" id="reqModal" aria-hidden="true"><div class="modal-card req-card" role="dialog" aria-modal="true">
+  <button class="modal-x" id="reqX" aria-label="Close">×</button>
+  <h3>Show requirements</h3>
+  <button type="button" class="req-btn active" data-req="Both">Both <small id="rcBoth"></small></button>
+  <button type="button" class="req-btn" data-req="Required">Required <small id="rcReq"></small></button>
+  <button type="button" class="req-btn" data-req="Optional">Optional <small id="rcOpt"></small></button>
+</div></div>
+<div class="modal" id="modal" aria-hidden="true"><div class="modal-card" role="dialog" aria-modal="true">
+  <button class="modal-x" id="modalX" aria-label="Close">×</button>
+  <img class="modal-img" id="mImg" alt="">
+  <h3 id="mTitle"></h3>
+  <span class="req-badge" id="mReq"></span>
+  <dl class="facts" id="mFacts"></dl>
+  <div class="modal-actions"><button class="btn primary" id="mDone"></button><button class="btn" id="mClose">Close</button></div>
+</div></div>
 <script>
 const SHEET_ID="1M4TX5Q2YtTJkMJkVS_eJLs1y4PWMur-7w21Zvp6RcNs";
 const TABS=[{key:"CAS",sheet:"CAS",label:"CAS"},{key:"BB",sheet:"BUILDBUY",label:"Build / Buy"}];
@@ -128,7 +185,12 @@ let data={CAS:[],BB:[]},tab="CAS",req="Both";
 const esc=s=>String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 const fileId=u=>{u=String(u||"");const m=u.match(/\/d\/([^\/?]+)/)||u.match(/[?&]id=([^&]+)/);return m?m[1]:""};
 const img=u=>{const i=fileId(u);return i?`https://drive.google.com/thumbnail?id=${i}&sz=w200`:(u||"")};
-const isReq=r=>/^req/i.test(r.req);
+const SR_KEY="casbb_secreq_v1";
+let secReq=load(SR_KEY);
+const tabOf=r=>r.key.split("|")[0];
+const secOverride=r=>secReq[tabOf(r)+"|"+r.section]||"";
+const reqLabel=r=>secOverride(r)||r.req||"";
+const isReq=r=>{const o=secOverride(r);return o?o==="Required":/^req/i.test(r.req)};
 
 function gviz(sheet){
   return new Promise((res,rej)=>{
@@ -240,7 +302,7 @@ function render(){
       const label=r.id||`${r.section} ${n+1}`;
       return `<div class="item ${isD(r)?"done":""}" data-k="${esc(r.key)}" title="${esc(label)}">
         <div class="goal-icon">${r.idIcon?`<img loading="lazy" src="${img(r.idIcon)}" alt="" onerror="this.style.display='none'">`:""}</div>
-        ${r.packIcon?`<span class="pack-hover" data-pack-name="${esc(r.pack)}"><img loading="lazy" src="${img(r.packIcon)}" alt="" onerror="this.style.display='none'"></span>`:"<span></span>"}
+        <div class="item-foot">${r.packIcon?`<span class="pack-hover" data-pack-name="${esc(r.pack)}"><img loading="lazy" src="${img(r.packIcon)}" alt="" onerror="this.style.display='none'"></span>`:""}<button type="button" class="info-btn" data-info="${esc(r.key)}" aria-label="Details">i</button></div>
       </div>`}).join("");
     return `<section class="section ${col?"is-collapsed":""}" data-sec="${esc(name)}">
       <div class="section-head" style="border-bottom-color:${rc}"><span class="arrow">${col?"▸":"▾"}</span><h2>${esc(name)}</h2>
@@ -254,7 +316,9 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("[data-tab]");
   if(t){tab=t.dataset.tab;fillFilters();render();return}
   const rb=e.target.closest(".req-btn");
-  if(rb){req=rb.dataset.req;document.querySelectorAll(".req-btn").forEach(b=>b.classList.toggle("active",b===rb));render();return}
+  if(rb){req=rb.dataset.req;document.querySelectorAll(".req-btn").forEach(b=>b.classList.toggle("active",b===rb));setReqLabel();closeReq();render();return}
+  const ib=e.target.closest(".info-btn");
+  if(ib){openInfo(ib.dataset.info);return}
   const it=e.target.closest(".item");
   if(it){
     const k=it.dataset.k;if(done[k])delete done[k];else done[k]=1;save(LS.done,done);
@@ -272,9 +336,122 @@ document.addEventListener("click",e=>{
   }
 });
 ["search","sectionFilter","genderFilter","stageFilter","packFilter","statusFilter"].forEach(id=>$(id).addEventListener("input",render));
+/* ---- themes ---- */
+const THEME_KEY="casbb_theme_v1";
+// [name, group, bg, panel, ink, muted, line, accent, accentSoft, accentDark, alt, cream, sageSoft, gradient|null, dark?]
+const THEMES=[
+ ["Rose cream","solid","#faf6ee","#fffdf8","#5c4f42","#948575","#e9ddc8","#c98d84","#f2ddd8","#96635a","#d8c9ee","#fbf0d9","#e5ecdf",null,0],
+ ["Midnight simlish","solid","#14142b","#1f1f3d","#e6e4f5","#9d9ac0","#36365e","#8b7cf6","#2d2a5a","#c3baff","#5b4fb0","#26264a","#232348",null,1],
+ ["Strawberry milk","solid","#fff3f3","#fffafa","#6b3a42","#a47880","#f2cdd2","#e8626f","#fbdadd","#a63a48","#f4b6bf","#fff0ee","#f7d9de",null,0],
+ ["Cottage moss","solid","#f3f5ec","#fbfcf6","#46503a","#7d876e","#d9e0c8","#5f8a4a","#dfead2","#3f5f30","#a9c48e","#eef2e0","#dbe6c9",null,0],
+ ["Lavender dusk","solid","#f2eefb","#fbf9ff","#4a3f6b","#8a7fae","#ddd3f2","#7a63c9","#e4dcf8","#4d3d94","#b7a6ea","#f0eaff","#dcd2f4",null,0],
+ ["Mocha latte","solid","#f4ece3","#fbf6f0","#4e3b2e","#8f7766","#e3d3c1","#8a5a3c","#ecd9c8","#5c3a22","#c9a88a","#f2e6d8","#e6d5c2",null,0],
+ ["Pastel sky","grad","#e9f1fb","#fdfbff","#4f4a6b","#857fa6","#e1d8f0","#d98aa3","#f7dbe5","#9a5870","#cdbdf0","#fbeef4","#dde8f8","linear-gradient(135deg,#bfe3f5,#f9d4e4 55%,#d4c8f5)",0],
+ ["Ocean mist","grad","#e3f4fa","#fafeff","#35506b","#6f8ca6","#cfe3ef","#4f86c6","#d6e8f8","#2f5d94","#a9b8f0","#eaf6fb","#d2e8f4","linear-gradient(135deg,#c9f0f7,#a6d1f5 55%,#b6aef2)",0],
+ ["Cotton candy","grad","#fdeaf4","#fffafd","#5f4767","#9a82a3","#ecd6ee","#d86fa8","#fadbec","#a23d78","#c7b3f2","#fdf0f8","#dfe9fb","linear-gradient(135deg,#ffd0e6,#e3d3ff 55%,#cfe6ff)",0],
+ ["Golden hour","grad","#fff4df","#fffcf6","#5e4030","#a07f68","#f1dcc3","#e07a4f","#fde0cc","#a4502b","#f5c28c","#fff0d8","#fde6d0","linear-gradient(135deg,#ffefb0,#ffcfa2 55%,#ffaea4)",0],
+ ["Berry smoothie","grad","#fbe6f3","#fffafd","#5a3556","#97708f","#ecd1e6","#b04a9e","#f1d5ee","#7c2d71","#c7a2ef","#fcecf8","#e4dcf8","linear-gradient(135deg,#ffbcd9,#d8a4ef 55%,#a3a0ef)",0],
+ ["Galaxy dust","grad","#1a1040","#241a4a","#efe8ff","#b3a6dd","#413075","#c77dff","#3a2970","#e0b8ff","#7b4fd1","#2c2058","#2f2262","linear-gradient(135deg,#150c3a,#3a1b78 55%,#8f2c93)",1],
+ ["Cherry blossom","grad","#fff0f4","#fffbfc","#6a4350","#a98592","#f4d7df","#e0728f","#fbdce5","#a8445f","#f3b6c8","#fff0f3","#e2f1de","linear-gradient(135deg,#ffdce8,#fff0f2 55%,#e1f1dc)",0]
+];
+function applyTheme(name){
+  const t=THEMES.find(x=>x[0]===name)||THEMES[0],r=document.documentElement.style;
+  const map={bg:t[2],panel:t[3],ink:t[4],muted:t[5],line:t[6],accent:t[7],"accent-soft":t[8],"accent-dark":t[9],lavender:t[10],cream:t[11],"sage-soft":t[12],
+    rose:t[7],"rose-soft":t[8],sage:t[10],"btn-bg":t[14]?t[11]:t[3],"btn-ink":t[4],"btn-line":t[6],card:t[3]+(t[13]?"e0":"f0")};
+  for(const k in map)r.setProperty("--"+k,map[k]);
+  if(t[13])r.setProperty("--bg","transparent");
+  document.body.style.background=t[13]||"";
+  document.body.style.backgroundAttachment=t[13]?"fixed":"";
+  r.colorScheme=t[14]?"dark":"light";
+  try{localStorage.setItem(THEME_KEY,t[0])}catch{}
+  return t[0];
+}
+function buildThemeMenu(cur){
+  let h="",grp="";
+  for(const t of THEMES){
+    if(t[1]!==grp){grp=t[1];if(grp==="grad")h+='<div class="theme-group">Gradients</div>'}
+    h+=`<button type="button" class="theme-opt ${t[0]===cur?"on":""}" data-theme="${esc(t[0])}"><span class="theme-sw"><i style="background:${t[8]}"></i><i style="background:${t[7]}"></i><i style="background:${t[9]}"></i></span>${esc(t[0])}</button>`;
+  }
+  $("themeMenu").innerHTML=h;
+}
+let curTheme="Rose cream";
+try{curTheme=localStorage.getItem(THEME_KEY)||curTheme}catch{}
+curTheme=applyTheme(curTheme);buildThemeMenu(curTheme);
+$("themeBtn").onclick=e=>{e.stopPropagation();$("themeMenu").classList.toggle("open")};
+$("themeMenu").addEventListener("click",e=>{
+  const b=e.target.closest(".theme-opt");if(!b)return;
+  curTheme=applyTheme(b.dataset.theme);buildThemeMenu(curTheme);
+});
+document.addEventListener("click",e=>{if(!e.target.closest("#themeMenu"))$("themeMenu").classList.remove("open")});
 $("filtersToggle").onclick=()=>$("mainLayout").classList.toggle("filters-hidden");
 $("refreshBtn").onclick=refresh;
 $("resetBtn").onclick=()=>{if(confirm("Reset all completion progress?")){done={};save(LS.done,done);render()}};
+
+/* ---- requirement popup ---- */
+let infoKey=null;
+function openInfo(k){
+  const r=data[tab].find(x=>x.key===k);if(!r)return;
+  infoKey=k;
+  const im=$("mImg");
+  if(r.idIcon){im.src=img(r.idIcon).replace("sz=w200","sz=w500");im.style.display=""}else im.style.display="none";
+  $("mTitle").textContent=r.id||r.section;
+  const b=$("mReq"),lbl=reqLabel(r),rq=lbl?(isReq(r)?"r":"o"):"u";
+  b.className="req-badge "+rq;b.textContent=lbl||"No requirement set";
+  const facts=[["Section",r.section],["Pack",r.pack],["Gender",r.gender],["Life stage",r.stage]].filter(f=>f[1]);
+  $("mFacts").innerHTML=facts.map(f=>`<dt>${f[0]}</dt><dd>${esc(f[1])}</dd>`).join("");
+  syncInfoDone();
+  $("modal").classList.add("open");$("modal").setAttribute("aria-hidden","false");
+}
+function syncInfoDone(){$("mDone").textContent=done[infoKey]?"Mark as not done":"Mark as done"}
+function closeInfo(){$("modal").classList.remove("open");$("modal").setAttribute("aria-hidden","true");infoKey=null}
+$("modalX").onclick=$("mClose").onclick=closeInfo;
+$("modal").addEventListener("click",e=>{if(e.target===$("modal"))closeInfo()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeInfo()});
+$("mDone").onclick=()=>{
+  const k=infoKey;if(!k)return;
+  if(done[k])delete done[k];else done[k]=1;save(LS.done,done);
+  if($("statusFilter").value==="incomplete"){closeInfo();render();return}
+  const el=[...document.querySelectorAll(".item")].find(x=>x.dataset.k===k);
+  if(el)el.classList.toggle("done",!!done[k]);
+  updateBars();updateSectionProgress();syncInfoDone();
+};
+/* ---- per-section requirement popup ---- */
+function openSec(){
+  const names=[...new Set(data[tab].map(r=>r.section))];
+  $("secList").innerHTML=names.map(n=>{
+    const v=secReq[tab+"|"+n]||"";
+    return `<div class="sec-row"><span>${esc(n)}</span><select data-sec="${esc(n)}" class="${v?"set":""}">
+      <option value=""${v===""?" selected":""}>Default</option>
+      <option value="Required"${v==="Required"?" selected":""}>Required</option>
+      <option value="Optional"${v==="Optional"?" selected":""}>Optional</option></select></div>`}).join("")||'<div class="sec-row">No sections yet.</div>';
+  $("secModal").classList.add("open");$("secModal").setAttribute("aria-hidden","false");
+}
+function closeSec(){$("secModal").classList.remove("open");$("secModal").setAttribute("aria-hidden","true")}
+$("secBtn").onclick=openSec;$("secX").onclick=closeSec;
+$("secModal").addEventListener("click",e=>{if(e.target===$("secModal"))closeSec()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeSec()});
+$("secList").addEventListener("change",e=>{
+  const sel=e.target.closest("select");if(!sel)return;
+  const k=tab+"|"+sel.dataset.sec;
+  if(sel.value)secReq[k]=sel.value;else delete secReq[k];
+  sel.classList.toggle("set",!!sel.value);
+  save(SR_KEY,secReq);updateBars();
+  if(req!=="Both")render();   // filter results may change
+});
+/* ---- requirement filter popup ---- */
+function setReqLabel(){
+  const b=$("reqBtn");b.textContent="Requirement: "+req+" ▾";b.classList.toggle("active",req!=="Both");
+}
+function openReq(){
+  const all=data[tab],rq=all.filter(isReq).length;
+  $("rcBoth").textContent=all.length;$("rcReq").textContent=rq;$("rcOpt").textContent=all.length-rq;
+  $("reqModal").classList.add("open");$("reqModal").setAttribute("aria-hidden","false");
+}
+function closeReq(){$("reqModal").classList.remove("open");$("reqModal").setAttribute("aria-hidden","true")}
+$("reqBtn").onclick=openReq;$("reqX").onclick=closeReq;
+$("reqModal").addEventListener("click",e=>{if(e.target===$("reqModal"))closeReq()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeReq()});
+setReqLabel();
 refresh();setInterval(refresh,REFRESH_MS);
 </script>
 </body>
