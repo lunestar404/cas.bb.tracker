@@ -713,8 +713,7 @@ function render(){
       const label=r.id||`${r.section} ${n+1}`;
       return `<div class="item ${isDone(r)?"done":""}" data-k="${esc(r.key)}" title="${esc(label)}">
         <div class="goal-icon">${r.idIcon?`<img loading="lazy" src="${img(r.idIcon)}" alt="" onerror="${IMG_ERR}">`:""}</div>
-        <div class="goal-content"><div class="name">${esc(label)}</div></div>
-        <span class="item-foot">${r.packIcon?`<span class="pack-hover" data-pack-name="${esc(r.pack)}"><img loading="lazy" src="${img(r.packIcon)}" alt="" onerror="${IMG_ERR}"></span>`:""}<button type="button" class="info-btn" data-info="${esc(r.key)}" aria-label="Details">i</button></span>
+        <span class="item-foot">${r.packIcon?`<span class="pack-hover" data-pack-name="${esc(r.pack)}"><img loading="lazy" src="${img(r.packIcon)}" alt="" onerror="${IMG_ERR}"></span>`:""}<button type="button" class="info-btn" data-info="${esc(r.key)}" title="Details" aria-label="Details: ${esc(label)}">i</button></span>
       </div>`}).join("");
     return `<section class="section ${col?"is-collapsed":""}" data-sec="${esc(name)}">
       <div class="section-head"><span class="section-toggle-arrow">${col?"▸":"▾"}</span><h2>${esc(name)}</h2>
