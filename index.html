@@ -574,6 +574,7 @@ const reqLabel=r=>secOverride(r)||r.req||"";
 const isReq=r=>{const o=secOverride(r);return o?o==="Required":/^req/i.test(r.req)};
 const isDone=r=>!!done[r.key];
 const packOn=r=>!r.pack||packState[r.pack]!==false;
+function uniq(rows){const m=new Map();rows.forEach(r=>{const c=m.get(r.key);if(!c)m.set(r.key,{r,req:isReq(r)});else if(isReq(r))c.req=true});return [...m.values()]}
 const passPack=r=>packOn(r)&&(!packView||r.pack===packView);
 
 /* ---------- sheet loading ---------- */
@@ -607,9 +608,12 @@ function parse(grid,key){
   grid.slice(h+1).forEach((r,n)=>{
     const o={section:g(r,c.section),gender:g(r,c.gender),stage:g(r,c.stage),req:g(r,c.req),pack:g(r,c.pack),id:g(r,c.id),packIcon:g(r,c.packIcon),idIcon:g(r,c.idIcon)};
     if(!o.section&&!o.id&&!o.idIcon)return;
-    o.section=o.section||"Other";
-    o.key=key+"|"+(fileId(o.idIcon)||o.id||("row"+n));
-    out.push(o);
+    const k=key+"|"+(fileId(o.idIcon)||o.id||("row"+n));
+    const secs=(o.section||"Other").split(/[;|\n]+/).map(x=>x.trim()).filter(Boolean);
+    (secs.length?secs:["Other"]).forEach(sn=>{
+      if(out.some(x=>x.key===k&&x.section.toLowerCase()===sn.toLowerCase()))return;
+      out.push(Object.assign({},o,{section:sn,key:k}));
+    });
   });
   return out;
 }
@@ -665,7 +669,7 @@ function renderPackProgress(){
   const box=$("packProgressList");
   const names=packList().map(x=>x[0]);
   box.innerHTML=names.length?names.map(p=>{
-    const goals=data[tab].filter(r=>r.pack===p&&isReq(r));
+    const goals=uniq(data[tab].filter(r=>r.pack===p)).filter(x=>x.req).map(x=>x.r);
     const d=goals.filter(isDone).length,t=goals.length,pct=t?Math.round(d/t*100):0;
     return `<div class="pack-progress-card"><div class="pack-progress-head"><span>${esc(p)}</span><span>${d}/${t} (${pct}%)</span></div><div class="pack-progress-bar"><div class="pack-progress-fill" style="width:${pct}%"></div></div></div>`;
   }).join(""):'<div class="status">No pack data.</div>';
@@ -678,10 +682,10 @@ function setBar(i,d,t){
   $("ring"+i).style.setProperty("--pct",p);
 }
 function updateBars(){
-  const all=data[tab].filter(passPack);
-  setBar(0,all.filter(isDone).length,all.length);
-  const rq=all.filter(isReq),op=all.filter(r=>!isReq(r));
-  setBar(1,rq.filter(isDone).length,rq.length);setBar(2,op.filter(isDone).length,op.length);
+  const all=uniq(data[tab].filter(passPack));
+  setBar(0,all.filter(x=>isDone(x.r)).length,all.length);
+  const rq=all.filter(x=>x.req),op=all.filter(x=>!x.req);
+  setBar(1,rq.filter(x=>isDone(x.r)).length,rq.length);setBar(2,op.filter(x=>isDone(x.r)).length,op.length);
 }
 function updateSectionProgress(){
   document.querySelectorAll("#content .section").forEach(sec=>{
@@ -704,9 +708,12 @@ function render(){
     (reqFilter==="Both"||(reqFilter==="Required"?isReq(r):!isReq(r)))&&(sv!=="incomplete"||!isDone(r))&&
     (!q||[r.section,r.gender,r.stage,r.pack,r.id].join(" ").toLowerCase().includes(q)));
   if(!rows.length){$("content").innerHTML=`<div class="card empty">${all.length?"No items match your filters.":"No items in this tab yet."}</div>`;return}
+  const cmp=(a,b)=>String(a).localeCompare(String(b),undefined,{numeric:true,sensitivity:"base"});
   const groups=new Map();
   rows.forEach(r=>{if(!groups.has(r.section))groups.set(r.section,[]);groups.get(r.section).push(r)});
-  $("content").innerHTML=[...groups].map(([name,items])=>{
+  const sorted=[...groups].sort((a,b)=>cmp(a[0],b[0]));
+  sorted.forEach(g=>g[1].sort((a,b)=>(a.id?0:1)-(b.id?0:1)||cmp(a.id,b.id)));
+  $("content").innerHTML=sorted.map(([name,items])=>{
     const d=items.filter(isDone).length,pct=Math.round(d/items.length*100);
     const col=collapsed[tab+"|"+name]!==false;
     const cards=items.map((r,n)=>{
@@ -742,8 +749,7 @@ function toggleDone(k){
   save(LS.done,done);
   if(r)addHistory(r.id||r.section,done[k]?"Marked as done":"Marked as not done");
   if($("goalStatusViewFilter").value==="incomplete"){render();return}
-  const el=[...document.querySelectorAll(".item")].find(x=>x.dataset.k===k);
-  if(el)el.classList.toggle("done",!!done[k]);
+  document.querySelectorAll(".item").forEach(x=>{if(x.dataset.k===k)x.classList.toggle("done",!!done[k])});
   updateBars();updateSectionProgress();renderPackProgress();
 }
 
@@ -776,11 +782,12 @@ function openSec(){
 function openCount(){
   const rows=data[tab],on=rows.filter(packOn);
   const row=(l,v,n)=>`<div class="count-row"><span>${l}${n?`<div class="help">${n}</div>`:""}</span><b>${v}</b></div>`;
-  const off=rows.length-on.length,rq=on.filter(isReq).length;
+  const u=uniq(on),shared=on.length-u.length,off=rows.length-on.length,rq=u.filter(x=>x.req).length;
   let h=row("Rows loaded from the sheet ("+TABS.find(t=>t.key===tab).label+")",rows.length);
   if(off)h+=row("− Not counted: their pack is switched OFF in the side panel","−"+off);
-  h+=row("Required",rq)+row("Optional",on.length-rq);
-  h+=`<div class="count-row" style="font-size:15px"><b>Total shown in the progress card</b><b>${on.length}</b></div>`;
+  if(shared)h+=row("− Same icon in several sections (counted once)","−"+shared);
+  h+=row("Required",rq)+row("Optional",u.length-rq);
+  h+=`<div class="count-row" style="font-size:15px"><b>Total shown in the progress card</b><b>${u.length}</b></div>`;
   $("countCheckList").innerHTML=h;openM("countCheckModal");
 }
 
