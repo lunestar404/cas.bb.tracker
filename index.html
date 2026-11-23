@@ -414,8 +414,9 @@ html body .section.section.section > .section-head.section-head{background:var(-
 /* icons shown at their real size; card box shrinks to fit the icon */
 #content .section .section-body{display:flex !important;flex-wrap:wrap !important;align-items:flex-start !important;gap:10px !important}
 #content .section .section-body > .item,#content .section .section-body > .item + .item{width:auto !important;flex:0 0 auto !important;min-width:0 !important}
-#content .section .section-body > .item .goal-icon{width:auto !important;height:auto !important;overflow:visible !important}
-#content .section .section-body > .item .goal-icon img{width:auto !important;height:auto !important;max-width:none !important;max-height:none !important;filter:none !important;opacity:1 !important}
+/* every icon is a fixed 78 x 78 box; anything bigger/other shape is centre-cropped outward */
+#content .section .section-body > .item .goal-icon{width:78px !important;height:78px !important;flex:0 0 78px !important;overflow:hidden !important}
+#content .section .section-body > .item .goal-icon img{width:78px !important;height:78px !important;min-width:78px !important;max-width:78px !important;min-height:78px !important;max-height:78px !important;object-fit:cover !important;object-position:center center !important;filter:none !important;opacity:1 !important}
 #content .section .section-body > .item .goal-content{width:0 !important;min-width:100% !important}
 #content .section .section-body > .item:not(:has(.goal-icon img)){min-width:130px !important}
 #content .section.is-collapsed .section-body{display:none !important}
@@ -567,7 +568,7 @@ let data={CAS:[],BB:[]},tab="CAS",reqFilter="Both";
 const esc=s=>String(s??"").replace(/[&<>"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]));
 const fileId=u=>{u=String(u||"");const m=u.match(/\/d\/([^\/?]+)/)||u.match(/[?&]id=([^&]+)/);return m?m[1]:""};
 const img=u=>{const i=fileId(u);return i?`https://drive.google.com/thumbnail?id=${i}&sz=w200`:(u||"")};
-const IMG_ERR="if((+this.dataset.retry||0)>=4)this.style.display='none'";
+const IMG_ERR="";
 const tabOf=r=>r.key.split("|")[0];
 const secOverride=r=>secReq[tabOf(r)+"|"+r.section]||"";
 const reqLabel=r=>secOverride(r)||r.req||"";
@@ -615,6 +616,10 @@ function parse(grid,key){
       out.push(Object.assign({},o,{section:sn,key:k}));
     });
   });
+  // a row with a pack name but no Pack Icon link borrows the icon from another row of the same pack
+  const pk=new Map();
+  out.forEach(r=>{if(r.pack&&r.packIcon&&!pk.has(r.pack.toLowerCase()))pk.set(r.pack.toLowerCase(),r.packIcon)});
+  out.forEach(r=>{if(r.pack&&!r.packIcon&&pk.has(r.pack.toLowerCase()))r.packIcon=pk.get(r.pack.toLowerCase())});
   return out;
 }
 async function refresh(){
@@ -925,6 +930,10 @@ refresh();setInterval(refresh,REFRESH_MS);
   update();
 })();
 </script>
+<style>
+.pack-hover.pack-failed{display:inline-flex !important;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;border:1.5px dashed var(--accent,#c98d84);color:var(--accent-dark,#96635a);font-size:12px;font-weight:700;background:var(--accent-soft,#f2ddd8)}
+.pack-hover.pack-failed::before{content:"?"}
+</style>
 <script id="drive-image-retry">
 // Google Drive refuses image requests when too many arrive at once (broken-image boxes).
 // Retry a failed Drive icon a few times, spaced out, trying the other Drive image URL forms.
@@ -935,7 +944,12 @@ document.addEventListener("error", function(e){
   const m = src.match(/[?&]id=([^&]+)/) || src.match(/googleusercontent\.com\/d\/([^=\/?]+)/);
   if(!m) return;                                   // not a Drive image
   const n = +(img.dataset.retry||0);
-  if(n>=4) return;
+  if(n>=4){                                        // every attempt failed: show a visible marker instead of nothing
+    img.style.display="none";
+    const box=img.closest(".pack-hover");
+    if(box){box.classList.add("pack-failed");box.title=(box.dataset.packName||"Pack")+" - icon could not be loaded (check the Drive file is shared: Anyone with the link)"}
+    return;
+  }
   img.dataset.retry = n+1;
   const id = m[1];
   const urls = [
